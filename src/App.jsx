@@ -584,6 +584,7 @@ export default function App() {
   const volScrub = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
     audio.setVolume(Math.round(Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)) * 100));
+    if (audio.muted) audio.toggleMute();
   };
   const nextSong = () => { setSongIdx(i => (i + 1) % songs.length); };
   const prevSong = () => { setSongIdx(i => (i - 1 + songs.length) % songs.length); };
@@ -594,7 +595,7 @@ export default function App() {
     }
     setSongIdx(id);
     setView('player');
-    setTimeout(() => audio.play(), 100);
+    audio.play();
   };
 
   // Player view background: dynamic gradient from album palette (always vivid, regardless of theme)
