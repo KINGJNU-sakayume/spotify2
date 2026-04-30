@@ -62,8 +62,8 @@ export function getTheme(mode) {
 // ─── Font pairings ─────────────────────────────────────────────
 export const FONT_PAIRS = {
   editorial: {
-    heading: "'Playfair Display', Georgia, serif",
-    body:    "'Inter', -apple-system, sans-serif",
+    heading: "'Playfair Display', 'Nanum Myeongjo', Georgia, 'Apple SD Gothic Neo', serif",
+    body:    "'Pretendard Variable', 'Inter', -apple-system, sans-serif",
   },
 };
 
