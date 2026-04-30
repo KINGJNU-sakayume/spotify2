@@ -24,6 +24,7 @@ const LS = {
   refresh: 'spotify_refresh_token',
   expires: 'spotify_expires_at',
   verifier: 'spotify_code_verifier',
+  state: 'spotify_auth_state',
 };
 
 function base64url(bytes) {
@@ -55,7 +56,9 @@ export async function beginLogin() {
   }
   const verifier = randomString(96);
   const challenge = await sha256(verifier);
+  const state = randomString(32);
   localStorage.setItem(LS.verifier, verifier);
+  localStorage.setItem(LS.state, state);
 
   const params = new URLSearchParams({
     client_id: CLIENT_ID,
@@ -64,6 +67,8 @@ export async function beginLogin() {
     code_challenge_method: 'S256',
     code_challenge: challenge,
     scope: SCOPES,
+    state,
+    show_dialog: 'true',
   });
   window.location.href = `https://accounts.spotify.com/authorize?${params}`;
 }
@@ -100,6 +105,15 @@ export async function handleCallback() {
     return false;
   }
 
+  const returnedState = url.searchParams.get('state');
+  const expectedState = localStorage.getItem(LS.state);
+  localStorage.removeItem(LS.state);
+  if (!expectedState || returnedState !== expectedState) {
+    console.error('[spotify-auth] state mismatch', { returnedState, expectedState });
+    cleanUrl();
+    return false;
+  }
+
   try {
     const tok = await exchangeToken({
       client_id: CLIENT_ID,
@@ -111,9 +125,6 @@ export async function handleCallback() {
     persist(tok);
     localStorage.removeItem(LS.verifier);
     cleanUrl();
-    // Force a fresh mount so the player hook re-evaluates isLoggedIn() and
-    // the runtime metadata fetch effect runs against the new token.
-    window.location.reload();
     return true;
   } catch (e) {
     console.error('[spotify-auth] callback failed', e);
@@ -164,4 +175,5 @@ export function logout() {
   localStorage.removeItem(LS.refresh);
   localStorage.removeItem(LS.expires);
   localStorage.removeItem(LS.verifier);
+  localStorage.removeItem(LS.state);
 }

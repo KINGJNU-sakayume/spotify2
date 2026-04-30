@@ -419,6 +419,8 @@ export default function App() {
   const [liked, setLiked] = useState(false);
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
+  // Lifted auth state — flipping this re-runs the player hook's init effect.
+  const [loggedIn, setLoggedIn] = useState(() => isLoggedIn());
 
   // SETTINGS comes pre-filled from theme.js with the user's chosen tweaks
   const T = getTheme(SETTINGS.theme);
@@ -430,6 +432,7 @@ export default function App() {
   // Spotify Web Playback SDK hook (replaces local audio element)
   const audio = useSpotifyPlayer({
     song,
+    loggedIn,
     onEnded: () => {
       if (repeat) audio.seek(0);
       else nextSong();
@@ -437,7 +440,12 @@ export default function App() {
   });
 
   // Complete Spotify OAuth callback if URL has ?code= on first load.
-  useEffect(() => { handleCallback(); }, []);
+  useEffect(() => {
+    (async () => {
+      const ok = await handleCallback();
+      if (ok) setLoggedIn(true);
+    })();
+  }, []);
 
   // Eagerly populate album art via Spotify's public oEmbed endpoint, which
   // doesn't require auth. This means the cover image shows up immediately on
@@ -626,8 +634,8 @@ export default function App() {
               Spotify 로그인
             </button>
           )}
-          {banner.kind !== 'login' && isLoggedIn() && (
-            <button onClick={() => { logout(); window.location.reload(); }} style={{
+          {banner.kind !== 'login' && loggedIn && (
+            <button onClick={() => { logout(); setLoggedIn(false); }} style={{
               padding: '4px 10px', borderRadius: 12, border: '1px solid rgba(255,255,255,0.4)', cursor: 'pointer',
               background: 'transparent', color: '#fff', fontSize: 10, fontWeight: 600, fontFamily: F.body,
             }}>

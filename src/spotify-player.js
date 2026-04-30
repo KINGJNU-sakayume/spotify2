@@ -42,7 +42,7 @@ async function api(path, init = {}) {
   });
 }
 
-export function useSpotifyPlayer({ song, onEnded }) {
+export function useSpotifyPlayer({ song, onEnded, loggedIn = isLoggedIn() }) {
   const playerRef = useRef(null);
   const deviceIdRef = useRef(null);
   const rafRef = useRef(null);
@@ -55,7 +55,7 @@ export function useSpotifyPlayer({ song, onEnded }) {
   songRef.current = song;
 
   const [ready, setReady] = useState(false);
-  const [needsLogin, setNeedsLogin] = useState(!isLoggedIn());
+  const [needsLogin, setNeedsLogin] = useState(!loggedIn);
   const [error, setError] = useState(null);
 
   const [playing, setPlaying] = useState(false);
@@ -70,7 +70,7 @@ export function useSpotifyPlayer({ song, onEnded }) {
     let player;
 
     async function init() {
-      if (!isLoggedIn()) {
+      if (!loggedIn) {
         setNeedsLogin(true);
         return;
       }
@@ -157,10 +157,11 @@ export function useSpotifyPlayer({ song, onEnded }) {
       } catch {}
       playerRef.current = null;
       deviceIdRef.current = null;
+      setReady(false);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loggedIn]);
 
   // Smooth interpolation of `time` between SDK state updates (~1s apart).
   useEffect(() => {
