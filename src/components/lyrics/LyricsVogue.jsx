@@ -31,7 +31,11 @@ export default function LyricsVogue({ song, lyricIdx, C, F, fontSize, transition
           <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.22)', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: 22, fontWeight: 500, fontFamily: F.body }}>
             LYRICS / {String(lyricIdx + 1).padStart(2, '0')}
           </div>
-          <div key={animKey} style={{ animation: ANIMS[transition] || ANIMS.slideUp, marginBottom: 18 }}>
+          <div
+            key={animKey}
+            aria-live="polite"
+            aria-atomic="true"
+            style={{ animation: ANIMS[transition] || ANIMS.slideUp, marginBottom: 18 }}>
             <div style={{ fontSize: Math.max(16, Math.round(fontSize * 0.9)), fontWeight: 900, color: '#fff', lineHeight: 1.08, letterSpacing: '-1.2px', textTransform: 'uppercase', textShadow: `0 0 30px ${C.light}22`, fontFamily: F.body }}>
               {cur?.text || ''}
             </div>

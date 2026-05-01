@@ -26,7 +26,11 @@ export default function LyricsClassic({ song, lyricIdx, C, F, fontSize, transiti
         <div style={{ fontSize: 9, color: C.light, fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: 18, fontFamily: F.body }}>
           {song.artist} — {song.album}
         </div>
-        <div key={animKey} style={{ animation: ANIMS[transition] || ANIMS.slideUp, marginBottom: 20 }}>
+        <div
+          key={animKey}
+          aria-live="polite"
+          aria-atomic="true"
+          style={{ animation: ANIMS[transition] || ANIMS.slideUp, marginBottom: 20 }}>
           <div style={{ fontSize: Math.max(20, fontSize), fontWeight: 900, color: '#fff', lineHeight: 1.1, letterSpacing: '-0.8px', fontFamily: F.heading, fontStyle: 'italic', textShadow: `0 0 40px ${C.light}33` }}>
             {cur?.text || ''}
           </div>
