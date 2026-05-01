@@ -13,6 +13,7 @@
 import { writeFileSync, readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import path from 'node:path';
+import { spotifyTrackToInternal } from '../src/lib/spotifyTrack.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
@@ -76,16 +77,9 @@ async function fetchTracks(ids, token) {
       continue;
     }
     const t = await res.json().catch(() => null);
-    if (!t || !t.id) continue;
-    const art = (t.album?.images || []).slice().sort((a, b) => b.width - a.width)[0];
-    out[t.id] = {
-      title: t.name,
-      artist: (t.artists || []).map((a) => a.name).join(', '),
-      album: t.album?.name || '',
-      art: art?.url || '',
-      duration: Math.round((t.duration_ms || 0) / 1000),
-      year: (t.album?.release_date || '').slice(0, 4),
-    };
+    const meta = spotifyTrackToInternal(t);
+    if (!meta) continue;
+    out[t.id] = meta;
   }
   return out;
 }
