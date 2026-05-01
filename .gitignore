@@ -3,3 +3,4 @@ dist/
 .env
 .env.local
 .env.*.local
+src/songs.generated.json
