@@ -5,8 +5,14 @@ import { fmt } from '../../theme.js';
 export default function ListRow({ song, index, onClick, T, F }) {
   const [hov, setHov] = useState(false);
   return (
-    <div onClick={onClick} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-         style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '10px 12px', borderRadius: 8, cursor: 'pointer', background: hov ? T.hoverBg : 'transparent', transition: 'background 0.15s', borderBottom: `1px solid ${T.border}` }}>
+    <button
+      onClick={onClick}
+      aria-label={`${song.title} - ${song.artist} 재생`}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      onFocus={() => setHov(true)}
+      onBlur={() => setHov(false)}
+      style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '10px 12px', borderRadius: 8, cursor: 'pointer', background: hov ? T.hoverBg : 'transparent', transition: 'background 0.15s', border: 'none', borderBottom: `1px solid ${T.border}`, textAlign: 'left' }}>
       <div style={{ fontSize: 12, color: T.text4, fontWeight: 500, minWidth: 18, textAlign: 'center', fontVariantNumeric: 'tabular-nums', fontFamily: F.body }}>
         {hov ? <Icon name="play" size={12} color={T.text2} /> : index}
       </div>
@@ -20,6 +26,6 @@ export default function ListRow({ song, index, onClick, T, F }) {
       </div>
       <div style={{ fontSize: 10, color: T.text4, letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: F.body }}>{song.tag}</div>
       <div style={{ fontSize: 11, color: T.text3, fontVariantNumeric: 'tabular-nums', fontFamily: F.body }}>{fmt(song.duration)}</div>
-    </div>
+    </button>
   );
 }

@@ -68,9 +68,11 @@ export default function AlbumView({ song, onPlay, onBack, T, F }) {
           {song.tracks.map((track, i) => {
             const hov = hovTrack === i;
             return (
-              <div key={i} onClick={() => onPlay(song.id)}
+              <button key={i} onClick={() => onPlay(song.id)}
+                   aria-label={`${track.title} 재생`}
                    onMouseEnter={() => setHovTrack(i)} onMouseLeave={() => setHovTrack(null)}
-                   style={{ display: 'grid', gridTemplateColumns: '36px 1fr 80px', gap: 0, padding: '10px 12px', borderRadius: 8, cursor: 'pointer', background: hov ? T.hoverBg : 'transparent', transition: 'background 0.15s', borderBottom: `1px solid ${T.border}`, alignItems: 'center' }}>
+                   onFocus={() => setHovTrack(i)} onBlur={() => setHovTrack(null)}
+                   style={{ display: 'grid', gridTemplateColumns: '36px 1fr 80px', gap: 0, padding: '10px 12px', borderRadius: 8, cursor: 'pointer', background: hov ? T.hoverBg : 'transparent', transition: 'background 0.15s', border: 'none', borderBottom: `1px solid ${T.border}`, alignItems: 'center', width: '100%', textAlign: 'left' }}>
                 <div style={{ textAlign: 'center' }}>
                   {hov
                     ? <Icon name="play" size={13} color={C.accent} />
@@ -81,7 +83,7 @@ export default function AlbumView({ song, onPlay, onBack, T, F }) {
                   <div style={{ fontSize: 11, color: T.text3, marginTop: 2, fontFamily: F.body }}>{song.artist}</div>
                 </div>
                 <div style={{ fontSize: 12, color: T.text3, textAlign: 'right', fontVariantNumeric: 'tabular-nums', fontFamily: F.body }}>{track.dur}</div>
-              </div>
+              </button>
             );
           })}
         </div>
