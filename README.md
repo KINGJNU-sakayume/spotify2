@@ -23,7 +23,7 @@
 2. **Client ID** 를 복사 (Client Secret도 같이 보관 — 빌드 시에만 사용)
 3. App Settings → **Redirect URIs** 에 두 개 등록:
    - `http://localhost:5173/` — 로컬 개발용
-   - `https://<YOUR-GITHUB-USERNAME>.github.io/spotify2/` — 배포용
+   - `https://KINGJNU-sakayume.github.io/spotify2/` — 배포용
 4. APIs/SDKs 섹션에서 **Web Playback SDK** 가 활성화되어 있는지 확인
 
 ---
