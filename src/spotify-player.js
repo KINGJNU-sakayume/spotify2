@@ -269,8 +269,12 @@ export function useSpotifyPlayer({ song, onEnded, loggedIn = isLoggedIn() }) {
   }, []);
 
   const toggle = useCallback(() => {
+    if (!hasPlayedRef.current) {
+      play();
+      return;
+    }
     playerRef.current?.togglePlay().catch(() => {});
-  }, []);
+  }, [play]);
 
   const seek = useCallback(
     (t) => {
